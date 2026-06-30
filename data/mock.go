@@ -1,6 +1,9 @@
 package data
 
-import "sm-client-backend/models"
+import (
+	"fmt"
+	"sm-client-backend/models"
+)
 
 var MockUsers = []models.User{
 	{ID: "u1", Username: "budi", Slug: "SM-BUDI"},
@@ -259,7 +262,7 @@ var InitialVehicles = []models.Vehicle{
 		Year:                 1998,
 		LicensePlate:         "B 3 CAK",
 		VIN:                  "BCK-99887766",
-		Status:               "Pemasangan Mesin V12 Twin Turbo Charge beserta Speaker JBL serta pelelangan anak kecil kepada kyaisdfdsifbdshbfui dusbfusdbfub dsiufbuidsbf asuida io bdifbs",
+		Status:               "Pemasangan Mesin V12 Twin Turbo Charge beserta Speaker JBL serta perakitan knalpot brong untuk keliling bunderan balekambang diiringi gamelan jawa sembari menendang kebo",
 		CompletionPercentage: 30,
 		EstimatedCompletion:  "2026-12-30",
 		BannerImage:          "/images/becak_2.jpg",
@@ -293,4 +296,33 @@ var InitialVehicles = []models.Vehicle{
 			},
 		},
 	},
+}
+
+func init() {
+	for i := 5; i <= 24; i++ {
+		InitialVehicles = append(InitialVehicles, models.Vehicle{
+			ID:                   fmt.Sprintf("v%d", i),
+			ClientCode:           "SM-BUDI",
+			ClientName:           "Budi Santoso",
+			Brand:                "Supercar",
+			Model:                fmt.Sprintf("Model %d", i),
+			Year:                 2000 + (i % 20),
+			LicensePlate:         fmt.Sprintf("B %d ABC", i),
+			VIN:                  fmt.Sprintf("VIN123456%03d", i),
+			Status:               "In Progress",
+			CompletionPercentage: (i * 5) % 100,
+			EstimatedCompletion:  "2027-01-01",
+			BannerImage:          "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200",
+			RestorationType:      "Sample Restoration",
+			Timeline: []models.TimelineEvent{
+				{
+					ID:          fmt.Sprintf("t%d-1", i),
+					Status:      "Intake",
+					Date:        "2026-06-01",
+					Description: "Kendaraan masuk bengkel.",
+					Completed:   true,
+				},
+			},
+		})
+	}
 }
