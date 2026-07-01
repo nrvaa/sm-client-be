@@ -36,8 +36,6 @@ func main() {
 		return c.Next()
 	})
 
-
-
 	// Public routes
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.SendString("SM-Client API")
@@ -49,7 +47,7 @@ func main() {
 	// app.Get("/ws/:slug", websocket.New(handlers.WsHandler))
 
 	api := app.Group("/api")
-	
+
 	// Auth routes
 	api.Post("/login", func(c fiber.Ctx) error {
 		return handlers.Login(c)
