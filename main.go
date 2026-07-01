@@ -3,18 +3,28 @@ package main
 import (
 	"log"
 
+	"sm-client-backend/config"
 	"sm-client-backend/handlers"
 	"sm-client-backend/middleware"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load environment variables dari .env (jika ada)
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, relying on OS environment variables")
+	}
+
+	// Initialize Database Connection
+	config.ConnectDB()
+
 	app := fiber.New()
 
 	// Enable CORS for frontend explicitly
 	app.Use(func(c fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "http://localhost:5173") // or "*"
+		c.Set("Access-Control-Allow-Origin", "*")
 		c.Set("Access-Control-Allow-Methods", "GET, POST, HEAD, PUT, DELETE, PATCH, OPTIONS")
 		c.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, Access-Control-Request-Private-Network")
 		c.Set("Access-Control-Allow-Credentials", "true") // important for cookies
@@ -26,10 +36,17 @@ func main() {
 		return c.Next()
 	})
 
+
+
 	// Public routes
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.SendString("SM-Client API")
 	})
+
+	// WebSocket Route (misal: /ws/SM-BUDI)
+	// TODO: Di-disable sementara karena github.com/gofiber/contrib/websocket
+	// masih menggunakan Fiber v2, yang menyebabkan panic di Fiber v3.
+	// app.Get("/ws/:slug", websocket.New(handlers.WsHandler))
 
 	api := app.Group("/api")
 	
