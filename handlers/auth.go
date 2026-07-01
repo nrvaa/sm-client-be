@@ -4,10 +4,7 @@ import (
 	"time"
 
 	"sm-client-backend/auth"
-	"sm-client-backend/data"
-	"sm-client-backend/models"
-
-	"strings"
+	"sm-client-backend/repository"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -30,19 +27,9 @@ func Login(c fiber.Ctx) error {
 		loginIdentifier = req.Username
 	}
 
-	// nyocokin url_token dan access_code ke mock data (tar migrasi ke MySQL)
-	// contoh validasi sederhana sesuai alur dokumen
-	var selectedUser *models.User // Ganti dengan tipe user mock 
-	for _, user := range data.MockUsers {
-		// Mock mapping: asumsikan username digunakan atau kamu punya field url_token nanti
-		if strings.EqualFold(user.Username, loginIdentifier) || strings.EqualFold(user.Slug, loginIdentifier) {
-			u := user // copy
-			selectedUser = &u
-			break
-		}
-	}
-
-	if selectedUser == nil {
+	// Cocokkan access_code ke database
+	selectedUser, err := repository.GetUserByAccessCode(loginIdentifier)
+	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
