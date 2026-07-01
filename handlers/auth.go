@@ -7,10 +7,10 @@ import (
 	"sm-client-backend/data"
 	"sm-client-backend/models"
 
+	"strings"
+
 	"github.com/gofiber/fiber/v3"
 )
-
-import "strings"
 
 type LoginBody struct {
 	URLToken   string `json:"url_token"`
@@ -30,9 +30,9 @@ func Login(c fiber.Ctx) error {
 		loginIdentifier = req.Username
 	}
 
-	// Cocokkan url_token dan access_code ke mock data (Nanti ganti ke PostgreSQL/SQLite)
-	// Di sini dicontohkan validasi sederhana sesuai alur dokumen
-	var selectedUser *models.User // Ganti dengan tipe user mock kamu
+	// nyocokin url_token dan access_code ke mock data (tar migrasi ke MySQL)
+	// contoh validasi sederhana sesuai alur dokumen
+	var selectedUser *models.User // Ganti dengan tipe user mock 
 	for _, user := range data.MockUsers {
 		// Mock mapping: asumsikan username digunakan atau kamu punya field url_token nanti
 		if strings.EqualFold(user.Username, loginIdentifier) || strings.EqualFold(user.Slug, loginIdentifier) {
@@ -59,7 +59,7 @@ func Login(c fiber.Ctx) error {
 		Expires:  time.Now().Add(7 * 24 * time.Hour),
 		Path:     "/",
 		HTTPOnly: true,
-		Secure:   false, // Set ke true jika production (HTTPS)
+		Secure:   false, // Set jadi true pas production (HTTPS)
 		SameSite: "Strict",
 	})
 
